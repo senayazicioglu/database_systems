@@ -44,8 +44,7 @@ BEGIN
 END;
 /
  
-4) NUMBER türünde tek sütunlu ItemNum ile ITEM adlı bir tablo oluşturun.
-ItemNum için 1'den 5'e kadar değerler girebilen bir PL/SQL programı yazın.
+4) NUMBER türünde tek sütunlu ItemNum ile ITEM adlı bir tablo oluşturun. ItemNum için 1'den 5'e kadar değerler girebilen bir PL/SQL programı yazın.
 
 create table ITEM (ItemNum NUMBER);
  
@@ -114,7 +113,6 @@ END;
 
 select *from item;
  
-
 8) Bir kullanıcıdan geçerli bir çalışan kimliği girmesini istemek için bir PL/SQL bloğu yazın. Çalışanların adını, nitelik açıklamasını, maaşını ve komisyonunu alın.
 Adı, niteliği ve maaş ve komisyon tutarını yazdırın.
 
