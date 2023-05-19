@@ -36,8 +36,8 @@ BEGIN
 END;
 /
  
-3. İki değişkenin değerlerini değiştirmek için bir PL/SQL bloğu yazın.
-Değiştirmeden önce ve sonra değişkenleri yazdırın.
+3. İki değişkenin değerlerini değiştirmek için bir PL/SQL bloğu yazın.Değiştirmeden önce ve sonra değişkenleri yazdırın.
+
 SET SERVEROUTPUT ON
 DECLARE
   var1 varchar2(20) := 'Sena';
