@@ -1,0 +1,162 @@
+PL/SQL 
+
+1) Bir yılın artık yıl olup olmadığını öğrenmek için bir PL/SQL bloğu yazın. Artık yıl 4'e bölünebilir, ancak 100'e bölünemez veya 400'e bölünebilir. Örneğin, 2000 ve 2004 artık yıl, ancak 1900 ve 2001 artık yıl değil. (İpucu: MOD (n, d) işlevi n'yi d'ye böler ve işlemden kalan tamsayıyı döndürür)‏
+
+SET SERVEROUTPUT ON
+DECLARE 
+  yil NUMBER(4); 
+BEGIN 
+  yil := &yil; 
+  IF MOD(yil, 4) = 0 THEN 
+    IF MOD(yil, 100) != 0 or MOD(yil, 400) = 0 THEN 
+      DBMS_OUTPUT.PUT_LINE(yil || ' artık yıldır'); 
+    ELSE 
+      DBMS_OUTPUT.PUT_LINE(yil || ' artık yıl değildir'); 
+    END IF; 
+  ELSE 
+    DBMS_OUTPUT.PUT_LINE(yil || ' artık yıl değildir'); 
+  END IF; 
+END;
+/
+ 
+2) Temel bir döngü kullanarak 1 ile 10 arasındaki tüm tek sayıları yazdırmak için bir PL/SQL bloğu yazın.
+
+SET SERVEROUTPUT ON
+DECLARE
+  n NUMBER := 1;
+BEGIN
+  WHILE n <= 10 LOOP
+    IF n MOD 2 = 1 THEN
+      DBMS_OUTPUT.PUT_LINE(n);
+    END IF;
+    n := n +1;
+  END LOOP;
+END;
+/
+ 
+3) Bir FOR döngüsü kullanarak, 10'dan 1'e kadar olan değerleri ters sırayla yazdırın.
+
+SET SERVEROUTPUT ON
+BEGIN 
+  FOR i IN REVERSE 1..10 LOOP 
+    DBMS_OUTPUT.PUT_LINE(i); 
+  END LOOP; 
+END;
+/
+ 
+4) NUMBER türünde tek sütunlu ItemNum ile ITEM adlı bir tablo oluşturun.
+ItemNum için 1'den 5'e kadar değerler girebilen bir PL/SQL programı yazın.
+
+create table ITEM (ItemNum NUMBER);
+ 
+SET SERVEROUTPUT ON
+DECLARE
+BEGIN
+  FOR i IN 1..5 LOOP
+    insert into ITEM (ItemNum) values (i);
+  END LOOP;
+END;
+/
+
+select *from item;
+ 
+5) Yerine koyma değişkeni olan bir sayı girin ve ardından bir WHILE döngüsü kullanarak çarpım tablosunu yazdırın.
+
+SET SERVEROUTPUT ON
+DECLARE 
+  num NUMBER; 
+  i NUMBER;
+BEGIN 
+  num := &num_input; 
+  i := 1; 
+  WHILE i <= 10 LOOP 
+    DBMS_OUTPUT.PUT_LINE(num || ' x ' || i || ' = ' || (num * i)); 
+    i := i + 1;
+  END LOOP;
+END;
+/
+ 
+
+6) 1 ile 12 arasında bir ay numarası ve 4 basamaklı bir yıl girin ve o aydaki gün sayısını yazdırın. Şubat (ay = 2) için, 28 veya 29'a eşit gün sayısını görüntülemek için artık yılı kontrol edin.
+
+SET SERVEROUTPUT ON
+DECLARE
+  ay NUMBER;
+  yil NUMBER;
+  gun_sayisi NUMBER;
+BEGIN
+  ay := &ay_input;
+  yil := &yil_input;
+
+  IF ay = 2 THEN   --şubat ayı için artık yıl kontrolü
+    IF (MOD(yil, 4) = 0 AND MOD(yil, 100) != 0) OR MOD(yil, 400) = 0 THEN
+      gun_sayisi := 29;
+    ELSE
+      gun_sayisi := 28;
+    END IF;
+
+  ELSIF ay IN (4, 6, 9, 11) THEN
+    gun_sayisi := 30;
+  ELSE
+    gun_sayisi := 31;
+  END IF;
+  DBMS_OUTPUT.PUT_LINE('Gün Sayısı: ' || gun_sayisi);
+END;
+/
+
+7) 4. soruda oluşturulan ITEM tablosundan 4 numaralı maddeyi silmek için bir PL/SQL bloğu kullanın.
+
+DECLARE
+BEGIN
+  DELETE FROM ITEM WHERE ItemNum = 4;
+END;
+/
+
+select *from item;
+ 
+
+8) Bir kullanıcıdan geçerli bir çalışan kimliği girmesini istemek için bir PL/SQL bloğu yazın. Çalışanların adını, nitelik açıklamasını, maaşını ve komisyonunu alın.
+Adı, niteliği ve maaş ve komisyon tutarını yazdırın.
+
+create table employees (
+  employee_id NUMBER(6),
+  fname VARCHAR2(30),
+  lname VARCHAR2(30),
+  job_id VARCHAR2(20),
+  salary NUMBER(8, 2),
+  commission NUMBER(2, 2)
+);
+ 
+insert into employees (employee_id, fname, lname, job_id, salary, commission) values (1, 'Enes', 'Yalçın', 'Genel Müdür', 55000, 0.10);
+insert into employees (employee_id, fname, lname, job_id, salary, commission) values (2, 'Elif', 'Kaya', 'Analist', 37500, 0.05);
+insert into employees (employee_id, fname, lname, job_id, salary, commission) values (3, 'Ahmet', 'Demir', 'Mühendis', 40000, 0.08);
+insert into employees (employee_id, fname, lname, job_id, salary, commission) values (4, 'Sıla', 'Yıldız', 'Doktor', 35000, 0.03);
+insert into employees (employee_id, fname, lname, job_id, salary, commission) values (5, 'Ali', 'Aktürk', 'Öğretmen', 30000, 0.06);
+insert into employees (employee_id, fname, lname, job_id, salary, commission) values (6, 'Feyza', 'Öz', 'Avukat', 40000, 0.04);
+ 
+SET SERVEROUTPUT ON
+DECLARE
+  v_employee_id NUMBER(6);
+  v_fname employees.fname%TYPE;
+  v_lname employees.lname%TYPE;
+  v_job_id employees.job_id%TYPE;
+  v_salary employees.salary%TYPE;
+  v_commission employees.commission%TYPE;
+
+BEGIN
+  v_employee_id := &enter_employee_id;
+  SELECT fname, lname, job_id, salary, commission
+  INTO v_fname, v_lname, v_job_id, v_salary, v_commission
+  FROM employees
+  WHERE employee_id = v_employee_id;
+
+  DBMS_OUTPUT.PUT_LINE('Çalışan Adı: ' || v_fname || ' ' || v_lname);
+  DBMS_OUTPUT.PUT_LINE('Nitelik: ' || v_job_id);
+  DBMS_OUTPUT.PUT_LINE('Maaş: ' || v_salary);
+  DBMS_OUTPUT.PUT_LINE('Komisyon: ' || v_commission);
+EXCEPTION
+  WHEN NO_DATA_FOUND THEN
+    DBMS_OUTPUT.PUT_LINE('Geçerli bir employee_id girilmedi.');
+END;
+/
+ 

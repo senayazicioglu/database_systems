@@ -1,0 +1,111 @@
+PL/SQL 
+
+1. Aşağıdakileri gerçekleştirmek için bir PL/SQL anonim bloğu kullanan bir program betiği oluşturun: Sonucu depolamak için bir ana bilgisayar değişkeni AREA kullanın. 
+Sayısal veri türüyle yerel bir değişken RADIUS bildirin. 3.14 değeriyle sabit bir PI bildirin.Bir ikame değişkeni kullanarak RADIUS değişkenine bir değer atayın. Formülü kullanarak bir dairenin alanını hesaplayın ALAN = PI * YARIÇAP * YARIÇAP .Ardından sonucu SQL*Plus'ta yazdırın.
+
+VARIABLE area NUMBER;
+SET SERVEROUTPUT ON
+DECLARE
+  yaricap NUMBER;
+  pi CONSTANT NUMBER := 3.14;
+  alan NUMBER;
+BEGIN
+  yaricap := &yaricap_input; 
+  alan := pi * yaricap * yaricap;
+  :area := alan; -- Alanı ana bilgisayar değişkenine atama
+  DBMS_OUTPUT.PUT_LINE('Dairenin alanı: ' || alan); 
+END;
+/
+ 
+2. Bir ikame değişkeni ile girilen bir sayının karesini, küpünü ve çiftini bulmak için bir PL/SQL bloğu yazın ve yerleşik DBMS_OUTPUT paketini kullanarak sonuçları yazdırın.
+
+SET SERVEROUTPUT ON
+DECLARE
+  NUMBER_INPUT number := &number_input;
+  kare NUMBER;
+  kup NUMBER;
+  cift NUMBER;
+BEGIN
+  kare := NUMBER_INPUT * NUMBER_INPUT; --girilen sayının karesini hesaplama
+  kup := NUMBER_INPUT * NUMBER_INPUT * NUMBER_INPUT; --kup hesaplama
+  cift := 2 * NUMBER_INPUT; --çiftini hesaplama
+  
+  DBMS_OUTPUT.PUT_LINE('Sayının Karesi: ' || kare);
+  DBMS_OUTPUT.PUT_LINE('Sayının Küpü: ' || kup);
+  DBMS_OUTPUT.PUT_LINE('Sayının Çifti: ' || cift);
+END;
+/
+ 
+3. İki değişkenin değerlerini değiştirmek için bir PL/SQL bloğu yazın.
+Değiştirmeden önce ve sonra değişkenleri yazdırın.
+SET SERVEROUTPUT ON
+DECLARE
+  var1 varchar2(20) := 'Sena';
+  var2 varchar2(20) := 'Yazıcıoğlu';
+  temp varchar2(20);
+BEGIN
+  DBMS_OUTPUT.PUT_LINE('Değiştirmeden Önce:' || var1 || '  ' || var2);
+  temp := var1;
+  var1 := var2;
+  var2 := temp;
+  DBMS_OUTPUT.PUT_LINE('Değiştirdikten Sonra:' || var1 || '  ' || var2);
+END;
+/
+ 
+4. Saat ve oranı girmek için bir PL/SQL programı yazın. Brüt ücreti ve net ücreti bulun. Vergi oranı %28'dir. Sonuçlarınızı yazdırın.
+
+SET SERVEROUTPUT ON
+DECLARE
+  saat NUMBER := &enter_saat;
+  oran NUMBER := &enter_oran;
+  brut_ucret NUMBER;
+  net_ucret NUMBER;
+BEGIN
+  brut_ucret := saat*oran;
+  net_ucret:= brut_ucret*(1 - 0.28);
+  DBMS_OUTPUT.PUT_LINE('Brüt Ücret: ' || brut_ucret);
+  DBMS_OUTPUT.PUT_LINE('Net Ücret: ' || net_ucret);
+END;
+/
+ 
+5. Adı ve soyadı için iki değişkenli bir PL/SQL programı yazın. Tam adı, soyadı ve adı virgül ve boşlukla ayırarak yazdırın.
+
+SET SERVEROUTPUT ON
+DECLARE
+  fname VARCHAR2(20) := 'Sena';
+  lname VARCHAR2(20) := 'Yazıcıoğlu';
+BEGIN
+  DBMS_OUTPUT.PUT_LINE('Tam Ad: ' || lname || ', ' || fname);
+END;
+/
+  
+
+6. Belirli bir çalışan kimliğinin tam adını almak için bir PL/SQL programı yazın. Tam adı, soyadı ve adı virgül ve boşlukla ayırarak yazdırın.
+
+create table employees
+( employee_id number primary key,
+  fname varchar2(30),
+  lname varchar2(30) );
+ 
+insert into employees (employee_id, fname, lname) values (1, 'Enes', 'Yalçın');
+insert into employees (employee_id, fname, lname) values 2, 'Elif', 'Kaya');
+insert into employees (employee_id, fname, lname) values (3, 'Feyza', 'Öz');
+insert into employees (employee_id, fname, lname) values (4, 'Ahmet', 'Demir');
+ 
+SET SERVEROUTPUT ON
+DECLARE
+  v_employee_id NUMBER := &enter_employee_id;
+  v_lname employees.lname%TYPE;
+  v_fname employees.fname%TYPE;
+BEGIN
+  select lname, fname
+  into v_lname, v_fname
+  from employees
+  where employee_id = v_employee_id;
+
+  DBMS_OUTPUT.PUT_LINE(v_lname || ', ' || v_fname);
+EXCEPTION
+  WHEN NO_DATA_FOUND THEN
+    DBMS_OUTPUT.PUT_LINE('Çalışan kimliği bulunamadı.');
+END;
+/
